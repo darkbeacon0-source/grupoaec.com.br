@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal AEC - Treinamentos</title>
+<style>
+    body{font-family:Arial;margin:0;background:#f2f2f2;color:#333}
+    #loginTela{position:fixed;top:0;left:0;width:100%;height:100%;background:#2c3e50;display:flex;justify-content:center;align-items:center;z-index:9999;}
+    .login-box{background:white;padding:30px;border-radius:8px;width:280px;text-align:center;}
+    .login-box input{width:100%;padding:10px;margin:10px 0;border:1px solid #ddd;border-radius:4px;box-sizing:border-box;}
+    .login-box button{width:100%;padding:10px;cursor:pointer;background:#0a1f3d;color:white;border:none;border-radius:4px;font-weight:bold;}
+    .login-box button:hover{background:#112a4a;}
+    
+    header{
+        background:#0a1f3d; 
+        color:white; 
+        padding:12px 20px; 
+        display:flex; 
+        align-items:center;
+    }
+    .logo img{height:45px;}
+    .header-title{margin-left:15px; font-size:22px; font-weight:bold;}
+
+    nav{display:flex;justify-content:center;gap:25px;background:#112a4a;padding:12px;}
+    nav button{background:none;border:none;color:white;font-size:16px;cursor:pointer;transition:0.3s;}
+    nav button:hover{color:#e50914;}
+    .section{display:none;padding:30px;margin-bottom:100px;}
+    .active{display:block;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
+    .card{background:white;border-radius:8px;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:transform 0.3s;}
+    .card:hover{transform:translateY(-5px);}
+    .card img{width:100%;height:220px;object-fit:cover;}
+    .card p{padding:12px;margin:0;text-align:center;font-weight:500;}
+
+    /* PLAYER DE MÚSICA */
+    .music-player{
+        position:fixed;bottom:0;left:0;width:100%;background:#0a1f3d;color:white;
+        display:flex;align-items:center;justify-content:space-between;padding:10px 15px;
+        box-shadow:0 -3px 15px rgba(0,0,0,0.4);
+        z-index:1000;
+    }
+    .music-player button{background:none;border:none;color:white;font-size:22px;margin:0 8px;cursor:pointer;transition:0.3s;}
+    .music-player button:hover{color:#e50914;}
+    .music-info{flex:1; min-width:200px;}
+    .progress{width:40%; margin:0 15px;}
+    
+    h2{color:#0a1f3d;margin-top:0;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginTela">
+    <div class="login-box">
+        <h3>Acesso ao Portal AEC</h3>
+        <input id="usuario" placeholder="Usuário">
+        <input id="senha" type="password" placeholder="Senha">
+        <button onclick="logar()">Entrar</button>
+        <p id="erroLogin" style="color:red; margin-top:10px;"></p>
+    </div>
+</div>
+
+<header>
+    <div class="logo">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23e50914'/%3E%3Ctext x='50' y='60' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3EAEC%3C/text%3E%3C/svg%3E" alt="AEC"> 
+    </div>
+    <div class="header-title">Portal AEC - Treinamentos e Desenvolvimento</div>
+</header>
+
+<nav>
+    <button onclick="mostrar('musicas')">Cursos</button>
+    <button onclick="mostrar('videos')">Biblioteca</button>
+    <button onclick="mostrar('mangas')">Documentos</button>
+    <button onclick="mostrar('videoaulas')">Vídeo Aulas</button>
+</nav>
+
+<!-- CURSOS (Músicas) -->
+<div id="musicas" class="section active">
+    <h2>Cursos Internos</h2>
+    <div class="grid" id="gridMusicas"></div>
+</div>
+
+<!-- BIBLIOTECA, DOCUMENTOS E VÍDEO AULAS (mantidos mínimos) -->
+<div id="videos" class="section"><h2>Biblioteca</h2><div class="grid" id="gridVideos"></div></div>
+<div id="mangas" class="section"><h2>Documentos</h2><div id="mangaViewer"></div></div>
+<div id="videoaulas" class="section"><h2>Vídeo Aulas</h2><div class="grid" id="gridAulas"></div></div>
+
+<!-- PLAYER DE MÚSICA -->
+<div class="music-player">
+    <div class="music-info">
+        <strong id="musicTitle">Nenhum áudio selecionado</strong>
+    </div>
+    <div>
+        <button onclick="anterior()" title="Anterior">⏮</button>
+        <button onclick="playPause()" id="playBtn" title="Play/Pausa">▶️</button>
+        <button onclick="proxima()" title="Próxima">⏭</button>
+        <button onclick="toggleShuffle()" id="shuffleBtn" title="Aleatório">🔀</button>
+    </div>
+    <div class="progress">
+        <input type="range" id="progressBar" value="0" style="width:100%;" title="Progresso">
+    </div>
+    <div style="width:120px;">
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.8" style="width:100%;" title="Volume">
+    </div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+/* LOGIN */
+function logar(){
+    let usuario = document.getElementById("usuario").value;
+    let senha = document.getElementById("senha").value;
+    if(usuario === "admin" && senha === "admin"){
+        document.getElementById("loginTela").style.display = "none";
+        localStorage.setItem("loggedIn", "true");
+    } else {
+        document.getElementById("erroLogin").innerText = "Usuário ou senha incorretos!";
+    }
+}
+
+// Verificar se já está logado
+if(localStorage.getItem("loggedIn") === "true"){
+    document.getElementById("loginTela").style.display = "none";
+}
+
+// Enter para logar
+document.addEventListener("keypress", (e) => {
+    if(e.key === "Enter" && document.getElementById("loginTela").style.display !== "none"){
+        logar();
+    }
+});
+
+/* ABAS */
+function mostrar(secao){
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(secao).classList.add("active");
+}
+
+/* ====================== 100 CURSOS ====================== */
+const musicas = Array.from({length:100},(_,i)=>({
+    titulo: `Curso ${i+1}`,
+    arquivo: `audio/curso${String(i+1).padStart(2, '0')}.mp3`
+}));
+
+const audio = document.getElementById("audio");
+let currentIndex = 0;
+let shuffle = false;
+let shuffledList = [];
+
+function renderMusicas(){
+    gridMusicas.innerHTML = musicas.map((m,i) => `
+        <div class="card" onclick="tocar(${i})">
+            <img src="https://picsum.photos/seed/${i}/400/300" alt="${m.titulo}">
+            <p>${m.titulo}</p>
+        </div>
+    `).join("");
+}
+
+function tocar(i){
+    currentIndex = i;
+    audio.src = musicas[i].arquivo;
+    document.getElementById("musicTitle").innerText = musicas[i].titulo;
+    audio.play();
+    document.getElementById("playBtn").innerText = "⏸️";
+}
+
+function playPause(){
+    if(audio.paused){
+        audio.play();
+        document.getElementById("playBtn").innerText = "⏸️";
+    } else {
+        audio.pause();
+        document.getElementById("playBtn").innerText = "▶️";
+    }
+}
+
+function proxima(){
+    if(shuffle && shuffledList.length > 0){
+        currentIndex = shuffledList.shift();
+    } else {
+        currentIndex = (currentIndex + 1) % musicas.length;
+    }
+    tocar(currentIndex);
+}
+
+function anterior(){
+    currentIndex = (currentIndex - 1 + musicas.length) % musicas.length;
+    tocar(currentIndex);
+}
+
+function toggleShuffle(){
+    shuffle = !shuffle;
+    const btn = document.getElementById("shuffleBtn");
+    btn.style.color = shuffle ? "#e50914" : "white";
+    
+    if(shuffle){
+        shuffledList = [...Array(100).keys()].sort(() => Math.random() - 0.5);
+    }
+}
+
+/* Progresso e Volume */
+audio.addEventListener("timeupdate", () => {
+    document.getElementById("progressBar").value = (audio.currentTime / audio.duration) * 100 || 0;
+});
+document.getElementById("progressBar").addEventListener("input", () => {
+    audio.currentTime = (document.getElementById("progressBar").value / 100) * audio.duration;
+});
+audio.addEventListener("ended", proxima);
+document.getElementById("volume").addEventListener("input", () => {
+    audio.volume = document.getElementById("volume").value;
+});
+
+/* Inicialização */
+renderMusicas();
+</script>
+</body>
+</html>
