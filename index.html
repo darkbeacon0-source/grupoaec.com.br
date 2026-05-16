@@ -3,99 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal AEC - Treinamentos</title>
+<title>GRUPOAEC - Player</title>
 <style>
-    body{font-family:Arial;margin:0;background:#f2f2f2;color:#333}
-    #loginTela{position:fixed;top:0;left:0;width:100%;height:100%;background:#2c3e50;display:flex;justify-content:center;align-items:center;z-index:9999;}
-    .login-box{background:white;padding:30px;border-radius:8px;width:280px;text-align:center;}
-    .login-box input{width:100%;padding:10px;margin:10px 0;}
-    .login-box button{width:100%;padding:10px;cursor:pointer;}
-    
-    header{background:#0a1f3d;color:white;padding:12px 20px;display:flex;align-items:center;}
-    .logo{font-size:28px;font-weight:bold;}
-    
-    nav{display:flex;justify-content:center;gap:25px;background:#112a4a;padding:12px;}
-    nav button{background:none;border:none;color:white;font-size:16px;cursor:pointer;}
-    .section{display:none;padding:30px;}
-    .active{display:block;}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
-    .card{background:white;border-radius:8px;overflow:hidden;cursor:pointer;transition:0.2s;}
-    .card:hover{transform:scale(1.05);}
-    .card img{width:100%;height:220px;object-fit:cover;}
-    .card p{padding:12px;margin:0;text-align:center;font-weight:500;}
+:root{
+--verde:#1db954;
+--fundo:#121212;
+--card:#181818;
+}
 
-    .music-player{
-        position:fixed;bottom:0;left:0;width:100%;background:#0a1f3d;color:white;
-        display:flex;align-items:center;justify-content:space-between;padding:12px 15px;
-        box-shadow:0 -4px 15px rgba(0,0,0,0.5);
-        z-index:1000;
-    }
-    .music-player button{background:none;border:none;color:white;font-size:24px;margin:0 8px;cursor:pointer;}
-    .progress{flex:1;margin:0 15px;}
+body{
+background:var(--fundo);
+color:white;
+font-family:Arial;
+margin:0;
+padding-bottom:120px;
+}
+
+header{
+padding:20px;
+text-align:center;
+background:#000;
+font-size:24px;
+font-weight:bold;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+padding:30px;
+}
+
+.card{
+background:var(--card);
+border-radius:10px;
+overflow:hidden;
+cursor:pointer;
+transition:.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.thumbnail{
+width:100%;
+height:160px;
+object-fit:cover;
+}
+
+.info{
+padding:10px;
+text-align:center;
+}
+
+/* PLAYER */
+.player{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#000;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:15px;
+box-shadow:0 -5px 20px rgba(0,0,0,0.6);
+}
+
+.music-info{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.music-info img{
+width:50px;
+height:50px;
+border-radius:5px;
+}
+
+.controls{
+display:flex;
+gap:15px;
+align-items:center;
+}
+
+.controls button{
+background:none;
+border:none;
+color:white;
+font-size:22px;
+cursor:pointer;
+}
+
+.controls button:hover{
+color:var(--verde);
+}
+
+.progress{
+width:40%;
+}
+
+.progress input{
+width:100%;
+}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="loginTela">
-    <div class="login-box">
-        <h3>Acesso ao Portal AEC</h3>
-        <input id="usuario" placeholder="Usuário">
-        <input id="senha" type="password" placeholder="Senha">
-        <button onclick="logar()">Entrar</button>
-        <p id="erroLogin" style="color:red; margin-top:10px;"></p>
-    </div>
-</div>
+<header>GRUPOAEC 🎵</header>
 
-<header>
-    <div class="logo">AEC</div>
-    <div style="margin-left:15px;">Portal de Treinamentos</div>
-</header>
-
-<nav>
-    <button onclick="mostrar('musicas')">Cursos</button>
-</nav>
-
-<div id="musicas" class="section active">
-    <h2>Cursos Internos</h2>
-    <div class="grid" id="gridMusicas"></div>
-</div>
+<div class="grid" id="grid"></div>
 
 <!-- PLAYER -->
-<div class="music-player">
-    <div style="min-width:200px;"><strong id="musicTitle">Nenhum áudio selecionado</strong></div>
-    <div>
+<div class="player">
+    <div class="music-info">
+        <img id="cover" src="https://picsum.photos/seed/1/400/400">
+        <div id="title">Nenhuma música selecionada</div>
+    </div>
+
+    <div class="controls">
         <button onclick="anterior()">⏮</button>
         <button onclick="playPause()" id="playBtn">▶️</button>
         <button onclick="proxima()">⏭</button>
         <button onclick="toggleShuffle()" id="shuffleBtn">🔀</button>
     </div>
+
     <div class="progress">
-        <input type="range" id="progressBar" value="0" style="width:100%;">
+        <input type="range" id="barra" value="0">
     </div>
-    <div><input type="range" id="volume" min="0" max="1" step="0.01" value="0.8"></div>
 </div>
 
 <audio id="audio"></audio>
 
 <script>
-/* LOGIN */
-function logar(){
-    if(document.getElementById("usuario").value === "admin" && document.getElementById("senha").value === "admin"){
-        document.getElementById("loginTela").style.display = "none";
-    } else {
-        document.getElementById("erroLogin").innerText = "Usuário ou senha incorretos!";
-    }
-}
-
-function mostrar(secao){
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-    document.getElementById(secao).classList.add("active");
-}
-
-/* LISTA DE MÚSICAS */
+/* ====================== LISTA DE MÚSICAS ====================== */
 const musicas = [
-    {titulo: "The Whims of Fate", arquivo: "01. [SpotiSoft] The Whims of Fate - Lyn, アトラスサウンドチーム, ATLUS GAME MUSIC.mp3"},
+    {titulo: "Heaven", arquivo: "SpotifyMate.com - Heaven - 平田志穂子.mp3"},
     {titulo: "Jane! - The Long Faces", arquivo: "02. [SpotiSoft] Jane! - The Long Faces.mp3"},
     {titulo: "rei dos demônios", arquivo: "03. [SpotiSoft] rei dos demônios - Link do Zap, Cravinhos.mp3"},
     {titulo: "Diz A Ela", arquivo: "04. [SpotiSoft] 彼女に言って (Diz A Ela) - Lisa Ono.mp3"},
@@ -136,29 +181,26 @@ const musicas = [
     {titulo: "WILSHIRE", arquivo: "SpotiDown.App - WILSHIRE - Tyler_ The Creator.mp3"}
 ];
 
-function renderMusicas(){
-    gridMusicas.innerHTML = musicas.map((m, i) => `
+const grid = document.getElementById("grid");
+const audio = document.getElementById("audio");
+let currentIndex = 0;
+
+function render(){
+    grid.innerHTML = musicas.map((m, i) => `
         <div class="card" onclick="tocar(${i})">
-            <img src="https://picsum.photos/seed/${i}/400/300">
-            <p>${m.titulo}</p>
+            <img src="https://picsum.photos/seed/${i}/400/400" class="thumbnail">
+            <div class="info">${m.titulo}</div>
         </div>
     `).join("");
 }
 
-const audio = document.getElementById("audio");
-let currentIndex = 0;
-
 function tocar(i){
     currentIndex = i;
     audio.src = musicas[i].arquivo;
-    document.getElementById("musicTitle").innerText = musicas[i].titulo;
-    
-    audio.play().then(() => {
-        document.getElementById("playBtn").innerText = "⏸️";
-    }).catch(err => {
-        console.log("Erro ao tocar:", err);
-        alert("Não foi possível reproduzir esta música. Verifique se o arquivo está no GitHub.");
-    });
+    document.getElementById("title").textContent = musicas[i].titulo;
+    document.getElementById("cover").src = "https://picsum.photos/seed/" + i + "/400/400";
+    audio.play().catch(() => alert("Erro ao reproduzir. Verifique o nome do arquivo."));
+    document.getElementById("playBtn").innerText = "⏸️";
 }
 
 function playPause(){
@@ -188,18 +230,17 @@ function toggleShuffle(){
 /* Progresso */
 audio.addEventListener("timeupdate", () => {
     if(audio.duration){
-        document.getElementById("progressBar").value = (audio.currentTime / audio.duration) * 100;
+        document.getElementById("barra").value = (audio.currentTime / audio.duration) * 100;
     }
 });
 
-document.getElementById("progressBar").addEventListener("input", () => {
-    audio.currentTime = (document.getElementById("progressBar").value / 100) * audio.duration;
+document.getElementById("barra").addEventListener("input", (e) => {
+    audio.currentTime = (e.target.value / 100) * audio.duration;
 });
 
 audio.addEventListener("ended", proxima);
 
-/* Inicialização */
-renderMusicas();
+render();
 </script>
 </body>
 </html>
