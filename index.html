@@ -138,11 +138,11 @@ function mostrar(secao){
     document.getElementById(secao).classList.add("active");
 }
 
-/* ====================== CARREGAR CURSOS DINAMICAMENTE ====================== */
+/* ====================== CARREGAR 40 CURSOS DINAMICAMENTE ====================== */
 let musicas = [];
 
 // Função para extrair nome limpo do arquivo
-function getNomeCurso(nomeArquivo) {
+function getNomeCurso(nomeArquivo, indice) {
     // Remove a extensão .mp3
     let nome = nomeArquivo.replace(/\.mp3$/i, '');
     // Remove números sequenciais no início (curso01 -> 01)
@@ -151,7 +151,9 @@ function getNomeCurso(nomeArquivo) {
     nome = nome.replace(/[_-]/g, ' ');
     // Capitaliza primeira letra
     nome = nome.charAt(0).toUpperCase() + nome.slice(1);
-    return nome || nomeArquivo;
+    
+    // Se resultou vazio, usa o número do índice
+    return nome.trim() || `Curso ${indice + 1}`;
 }
 
 // Carregar lista de arquivos MP3 do repositório
@@ -163,12 +165,15 @@ async function carregarCursos() {
         if (Array.isArray(files)) {
             musicas = files
                 .filter(file => file.name.toLowerCase().endsWith('.mp3'))
-                .map(file => ({
-                    titulo: getNomeCurso(file.name),
+                .sort() // Ordena os arquivos por nome
+                .map((file, indice) => ({
+                    titulo: getNomeCurso(file.name, indice),
                     nomeArquivo: file.name,
-                    arquivo: `audio/${file.name}`
+                    arquivo: `audio/${file.name}`,
+                    numero: indice + 1
                 }));
             
+            console.log(`✅ ${musicas.length} cursos carregados com sucesso!`);
             renderMusicas();
         }
     } catch (error) {
@@ -180,11 +185,11 @@ async function carregarCursos() {
 
 // Fallback: carregar de um arquivo JSON local
 function carregarCursosLocal() {
-    // Você pode criar um arquivo "cursos.json" se preferir
-    // Por enquanto, vamos usar um padrão fixo
-    for(let i = 1; i <= 39; i++) {
+    console.log("📝 Carregando 40 cursos locais...");
+    for(let i = 1; i <= 40; i++) {
         musicas.push({
             titulo: `Curso ${i}`,
+            numero: i,
             arquivo: `audio/curso${String(i).padStart(2, '0')}.mp3`
         });
     }
@@ -198,7 +203,7 @@ let shuffledList = [];
 
 function renderMusicas(){
     gridMusicas.innerHTML = musicas.map((m,i) => `
-        <div class="card" onclick="tocar(${i})">
+        <div class="card" onclick="tocar(${i})" title="${m.titulo}">
             <img src="https://picsum.photos/seed/${i}/400/300" alt="${m.titulo}">
             <p>${m.titulo}</p>
         </div>
