@@ -19,16 +19,19 @@
     .section{display:none;padding:30px;}
     .active{display:block;}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
-    .card{background:white;border-radius:8px;overflow:hidden;cursor:pointer;}
+    .card{background:white;border-radius:8px;overflow:hidden;cursor:pointer;transition:0.2s;}
+    .card:hover{transform:scale(1.05);}
     .card img{width:100%;height:220px;object-fit:cover;}
     .card p{padding:12px;margin:0;text-align:center;font-weight:500;}
 
     .music-player{
         position:fixed;bottom:0;left:0;width:100%;background:#0a1f3d;color:white;
-        display:flex;align-items:center;justify-content:space-between;padding:10px 15px;
+        display:flex;align-items:center;justify-content:space-between;padding:12px 15px;
+        box-shadow:0 -4px 15px rgba(0,0,0,0.5);
+        z-index:1000;
     }
-    .music-player button{background:none;border:none;color:white;font-size:22px;margin:0 8px;cursor:pointer;}
-    .progress{width:40%;margin:0 15px;}
+    .music-player button{background:none;border:none;color:white;font-size:24px;margin:0 8px;cursor:pointer;}
+    .progress{flex:1;margin:0 15px;}
 </style>
 </head>
 <body>
@@ -67,7 +70,9 @@
         <button onclick="proxima()">⏭</button>
         <button onclick="toggleShuffle()" id="shuffleBtn">🔀</button>
     </div>
-    <div class="progress"><input type="range" id="progressBar" value="0" style="width:100%;"></div>
+    <div class="progress">
+        <input type="range" id="progressBar" value="0" style="width:100%;">
+    </div>
     <div><input type="range" id="volume" min="0" max="1" step="0.01" value="0.8"></div>
 </div>
 
@@ -88,7 +93,7 @@ function mostrar(secao){
     document.getElementById(secao).classList.add("active");
 }
 
-/* ====================== LISTA COMPLETA ====================== */
+/* LISTA DE MÚSICAS */
 const musicas = [
     {titulo: "The Whims of Fate", arquivo: "01. [SpotiSoft] The Whims of Fate - Lyn, アトラスサウンドチーム, ATLUS GAME MUSIC.mp3"},
     {titulo: "Jane! - The Long Faces", arquivo: "02. [SpotiSoft] Jane! - The Long Faces.mp3"},
@@ -147,8 +152,13 @@ function tocar(i){
     currentIndex = i;
     audio.src = musicas[i].arquivo;
     document.getElementById("musicTitle").innerText = musicas[i].titulo;
-    audio.play();
-    document.getElementById("playBtn").innerText = "⏸️";
+    
+    audio.play().then(() => {
+        document.getElementById("playBtn").innerText = "⏸️";
+    }).catch(err => {
+        console.log("Erro ao tocar:", err);
+        alert("Não foi possível reproduzir esta música. Verifique se o arquivo está no GitHub.");
+    });
 }
 
 function playPause(){
@@ -170,6 +180,23 @@ function anterior(){
     currentIndex = (currentIndex - 1 + musicas.length) % musicas.length;
     tocar(currentIndex);
 }
+
+function toggleShuffle(){
+    alert("Modo Aleatório em breve");
+}
+
+/* Progresso */
+audio.addEventListener("timeupdate", () => {
+    if(audio.duration){
+        document.getElementById("progressBar").value = (audio.currentTime / audio.duration) * 100;
+    }
+});
+
+document.getElementById("progressBar").addEventListener("input", () => {
+    audio.currentTime = (document.getElementById("progressBar").value / 100) * audio.duration;
+});
+
+audio.addEventListener("ended", proxima);
 
 /* Inicialização */
 renderMusicas();
