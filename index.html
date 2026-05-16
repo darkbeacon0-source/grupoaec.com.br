@@ -88,29 +88,29 @@ function mostrar(secao){
     document.getElementById(secao).classList.add("active");
 }
 
-/* ====================== LISTA DE MÚSICAS ====================== */
+/* ====================== LISTA COMPLETA ====================== */
 const musicas = [
     {titulo: "The Whims of Fate", arquivo: "01. [SpotiSoft] The Whims of Fate - Lyn, アトラスサウンドチーム, ATLUS GAME MUSIC.mp3"},
-    {titulo: "Jane! - The Long Faces", arquivo: "02.[SpotiSoft] Jane! - The Long Faces.mp3"},
-    {titulo: "rei dos demônios", arquivo: "03.[SpotiSoft] rei dos demônios - Link do Zap, Cravinhos.mp3"},
-    {titulo: "Diz A Ela", arquivo: "04.[SpotiSoft] 彼女に言って (Diz A Ela) - Lisa Ono.mp3"},
-    {titulo: "hora marcada", arquivo: "05.[SpotiSoft] hora marcada - Duddz.mp3"},
-    {titulo: "Pull the Trigger", arquivo: "06.[SpotiSoft] Pull the Trigger - 藤田真由美, Lotus Juice.mp3"},
-    {titulo: "Sexta-feira CLTV", arquivo: "07.[SpotiSoft] Sexta-feira CLTV - A L U A D O.mp3"},
-    {titulo: "Axe to Grind", arquivo: "08.[SpotiSoft] Axe to Grind - Lyn.mp3"},
-    {titulo: "o dever me chama", arquivo: "09.[SpotiSoft] o dever me chama - Link do Zap.mp3"},
-    {titulo: "luar", arquivo: "10.[SpotiSoft] luar - Duddz.mp3"},
-    {titulo: "neblina", arquivo: "11.[SpotiSoft] neblina - thatpaullo.mp3"},
-    {titulo: "20 Ligações", arquivo: "12.[SpotiSoft] 20 Ligações - Baco Exu do Blues.mp3"},
-    {titulo: "Falling Behind", arquivo: "13.[SpotiSoft] Falling Behind - Laufey.mp3"},
-    {titulo: "Deixa Acontecer", arquivo: "14.[SpotiSoft] Deixa Acontecer - Grupo Revelação.mp3"},
-    {titulo: "Piel Canela", arquivo: "15.[SpotiSoft] Piel Canela - Cuco.mp3"},
-    {titulo: "vivo ou morto", arquivo: "16.[SpotiSoft] vivo ou morto, um problema... - Zap, nabru.mp3"},
-    {titulo: "Relax", arquivo: "17.[SpotiSoft] Relax - Vacations.mp3"},
-    {titulo: "bossa uh", arquivo: "18.[SpotiSoft] bossa uh - potsu.mp3"},
-    {titulo: "just friends", arquivo: "19.[SpotiSoft] just friends - potsu.mp3"},
-    {titulo: "FLY ME TO THE MOON", arquivo: "20.[SpotiSoft] FLY ME TO THE MOON - Inst. Shiro SAGISU.mp3"},
-    {titulo: "(Your Cat) Don’t Stand a Chance", arquivo: "21.[SpotiSoft] (Your Cat) Don’t Stand a Chance - mustard service.mp3"},
+    {titulo: "Jane! - The Long Faces", arquivo: "02. [SpotiSoft] Jane! - The Long Faces.mp3"},
+    {titulo: "rei dos demônios", arquivo: "03. [SpotiSoft] rei dos demônios - Link do Zap, Cravinhos.mp3"},
+    {titulo: "Diz A Ela", arquivo: "04. [SpotiSoft] 彼女に言って (Diz A Ela) - Lisa Ono.mp3"},
+    {titulo: "hora marcada", arquivo: "05. [SpotiSoft] hora marcada - Duddz.mp3"},
+    {titulo: "Pull the Trigger", arquivo: "06. [SpotiSoft] Pull the Trigger - 藤田真由美, Lotus Juice.mp3"},
+    {titulo: "Sexta-feira CLTV", arquivo: "07. [SpotiSoft] Sexta-feira CLTV - A L U A D O.mp3"},
+    {titulo: "Axe to Grind", arquivo: "08. [SpotiSoft] Axe to Grind - Lyn.mp3"},
+    {titulo: "o dever me chama", arquivo: "09. [SpotiSoft] o dever me chama - Link do Zap.mp3"},
+    {titulo: "luar", arquivo: "10. [SpotiSoft] luar - Duddz.mp3"},
+    {titulo: "neblina", arquivo: "11. [SpotiSoft] neblina - thatpaullo.mp3"},
+    {titulo: "20 Ligações", arquivo: "12. [SpotiSoft] 20 Ligações - Baco Exu do Blues.mp3"},
+    {titulo: "Falling Behind", arquivo: "13. [SpotiSoft] Falling Behind - Laufey.mp3"},
+    {titulo: "Deixa Acontecer", arquivo: "14. [SpotiSoft] Deixa Acontecer - Grupo Revelação.mp3"},
+    {titulo: "Piel Canela", arquivo: "15. [SpotiSoft] Piel Canela - Cuco.mp3"},
+    {titulo: "vivo ou morto", arquivo: "16. [SpotiSoft] vivo ou morto, um problema... - Zap, nabru.mp3"},
+    {titulo: "Relax", arquivo: "17. [SpotiSoft] Relax - Vacations.mp3"},
+    {titulo: "bossa uh", arquivo: "18. [SpotiSoft] bossa uh - potsu.mp3"},
+    {titulo: "just friends", arquivo: "19. [SpotiSoft] just friends - potsu.mp3"},
+    {titulo: "FLY ME TO THE MOON", arquivo: "20. [SpotiSoft] FLY ME TO THE MOON - Inst. Shiro SAGISU.mp3"},
+    {titulo: "(Your Cat) Don’t Stand a Chance", arquivo: "21. [SpotiSoft] (Your Cat) Don’t Stand a Chance - mustard service.mp3"},
     {titulo: "Mystery Girl", arquivo: "22. [SpotiSoft] Mystery Girl - Housecall.mp3"},
     {titulo: "Espresso", arquivo: "23. [SpotiSoft] Espresso - Sabrina Carpenter.mp3"},
     {titulo: "青春コンプレックス", arquivo: "24. [SpotiSoft] 青春コンプレックス - 結束バンド.mp3"},
@@ -123,7 +123,12 @@ const musicas = [
     {titulo: "雨降る夜の向こう", arquivo: "32.[SpotiSoft] 雨降る夜の向こう - Lamp.mp3"},
     {titulo: "Abandoned Plaza", arquivo: "33.[SpotiSoft] Abandoned Plaza - Macabre Plaza.mp3"},
     {titulo: "A Toshi no Aki", arquivo: "34.[SpotiSoft] A Toshi no Aki - Lamp.mp3"},
-    {titulo: "Waiting", arquivo: "35.[SpotiSoft] Waiting - leverfall.mp3"}
+    {titulo: "Waiting", arquivo: "35.[SpotiSoft] Waiting - leverfall.mp3"},
+    {titulo: "Machine Love", arquivo: "Machine Love.mp3"},
+    {titulo: "Heart To Heart", arquivo: "SpotiDown.App - Heart To Heart - Mac DeMarco.mp3"},
+    {titulo: "See You Again", arquivo: "SpotiDown.App - See You Again _feat. Kali Uchis_ - Tyler_ The Creator_ Kali Uchis.mp3"},
+    {titulo: "Sugar", arquivo: "SpotiDown.App - Sugar - System Of A Down.mp3"},
+    {titulo: "WILSHIRE", arquivo: "SpotiDown.App - WILSHIRE - Tyler_ The Creator.mp3"}
 ];
 
 function renderMusicas(){
